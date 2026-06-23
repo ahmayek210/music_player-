@@ -1054,7 +1054,7 @@ function buildAssistantContext(){
   const favorites=readArray(favoritesStorage).map(normalizeTrack).filter(x=>x.id).slice(0,5).map(compactTrack);
   return{currentTrack:compactTrack(currentTrack()),playlists,history,favorites}
 }
-const ASSISTANT_SYSTEM_PROMPT=`Türkçe konuşan müzik uygulaması ajanısın. Uygulama verisini tahmin etme; gerektiğinde araçlarla oku ve kullanıcı bir işlem isterse aracı gerçekten çalıştır. Başarıyı yalnız araç başarılı döndüğünde söyle. Albüm aktarmada önce search_youtube_playlists, sonra import_youtube_playlist kullan; resmi sanatçı veya YouTube Music sonucunu tercih et. Şarkı silme yalnız açık istekle yapılır. Aynı şarkıyı iki kez ekleme. Uygunluk yorumları metadata ve genel müzik bilgisine dayanır; sesi dinlediğini iddia etme. Hataları gizleme. Cevapları kısa ve doğrudan tut.`;
+const ASSISTANT_SYSTEM_PROMPT=`Türkçe konuşan müzik uygulaması ajanısın. Uygulama verisini tahmin etme; gerektiğinde araçlarla oku ve kullanıcı bir işlem isterse aracı gerçekten çalıştır. Başarıyı yalnız araç başarılı döndüğünde söyle. Albüm aktarmada önce search_youtube_playlists, sonra import_youtube_playlist kullan; araç parametrelerinde limit gönderme; resmi sanatçı veya YouTube Music sonucunu tercih et. Şarkı silme yalnız açık istekle yapılır. Aynı şarkıyı iki kez ekleme. Uygunluk yorumları metadata ve genel müzik bilgisine dayanır; sesi dinlediğini iddia etme. Hataları gizleme. Cevapları kısa ve doğrudan tut.`;
 function assistantSystemPrompt(){return ASSISTANT_SYSTEM_PROMPT}
 function resolvePlaylistRef(ref){
   const playlists=getPlaylists();if(!ref)return null;const q=String(ref).trim().toLocaleLowerCase('tr-TR');
@@ -1096,9 +1096,9 @@ const MUSIC_AGENT_TOOLS=[
   {type:'function',function:{name:'add_current_track_to_playlist',description:'Seçili şarkıyı listeye ekle.',parameters:{type:'object',properties:{playlist:{type:'string'}},required:['playlist'],additionalProperties:false}}},
   {type:'function',function:{name:'add_tracks_to_playlist',description:'YouTube şarkılarını listeye ekle.',parameters:{type:'object',properties:{playlist:{type:'string'},tracks:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},channel:{type:'string'}},required:['id','title','channel'],additionalProperties:false}}},required:['playlist','tracks'],additionalProperties:false}}},
   {type:'function',function:{name:'remove_track_from_playlist',description:'Bir şarkıyı listeden çıkar.',parameters:{type:'object',properties:{playlist:{type:'string'},track:{type:'string'}},required:['playlist','track'],additionalProperties:false}}},
-  {type:'function',function:{name:'search_youtube_videos',description:'YouTube şarkı videoları ara.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:10}},required:['query'],additionalProperties:false}}},
-  {type:'function',function:{name:'search_youtube_playlists',description:'YouTube albüm veya listesi ara.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:8}},required:['query'],additionalProperties:false}}},
-  {type:'function',function:{name:'get_youtube_playlist_items',description:'YouTube listesindeki parçaları getir.',parameters:{type:'object',properties:{playlist_id:{type:'string'},limit:{type:'integer',minimum:1,maximum:50}},required:['playlist_id'],additionalProperties:false}}},
+  {type:'function',function:{name:'search_youtube_videos',description:'YouTube şarkı videoları ara.',parameters:{type:'object',properties:{query:{type:'string'}},required:['query'],additionalProperties:false}}},
+  {type:'function',function:{name:'search_youtube_playlists',description:'YouTube albüm veya listesi ara.',parameters:{type:'object',properties:{query:{type:'string'}},required:['query'],additionalProperties:false}}},
+  {type:'function',function:{name:'get_youtube_playlist_items',description:'YouTube listesindeki parçaları getir.',parameters:{type:'object',properties:{playlist_id:{type:'string'}},required:['playlist_id'],additionalProperties:false}}},
   {type:'function',function:{name:'import_youtube_playlist',description:'YouTube listesini uygulamaya aktar.',parameters:{type:'object',properties:{youtube_playlist_id:{type:'string'},name:{type:'string'},icon:{type:'string',enum:['music','heart','moon','star','headphones','bolt']}},required:['youtube_playlist_id','name'],additionalProperties:false}}},
   {type:'function',function:{name:'play_playlist',description:'Listeyi normal veya karışık oynat.',parameters:{type:'object',properties:{playlist:{type:'string'},shuffle:{type:'boolean'}},required:['playlist'],additionalProperties:false}}}
 ];
@@ -1126,7 +1126,22 @@ function selectMusicAgentTools(userText){
   if(playIntent)add('play_playlist');
   return[...names].map(name=>TOOL_BY_NAME.get(name)).filter(Boolean)
 }
+
+function normalizeIntegerArg(value, fallback, min, max){
+  const n=Number.parseInt(value,10);
+  if(!Number.isFinite(n))return fallback;
+  return Math.min(max,Math.max(min,n));
+}
+function sanitizeMusicAgentToolArgs(name,args={}){
+  const fixed={...(args&&typeof args==='object'?args:{})};
+  if(name==='search_youtube_videos')fixed.limit=normalizeIntegerArg(fixed.limit,6,1,10);
+  if(name==='search_youtube_playlists')fixed.limit=normalizeIntegerArg(fixed.limit,5,1,8);
+  if(name==='get_youtube_playlist_items')fixed.limit=normalizeIntegerArg(fixed.limit,30,1,50);
+  if(name==='play_playlist'&&typeof fixed.shuffle==='string')fixed.shuffle=/^(true|1|yes|evet|shuffle|karıştır|karistir)$/i.test(fixed.shuffle.trim());
+  return fixed;
+}
 async function executeMusicAgentTool(name,args={}){
+  args=sanitizeMusicAgentToolArgs(name,args);
   switch(name){
     case'list_playlists':return{ok:true,playlists:getPlaylists().slice(0,20).map(p=>({id:p.id,name:p.name,trackCount:p.tracks.length,tracks:p.tracks.slice(0,5).map(compactTrack)}))};
     case'get_playlist':{const p=resolvePlaylistRef(args.playlist);return p?{ok:true,playlist:{id:p.id,name:p.name,trackCount:p.tracks.length,truncated:p.tracks.length>30,tracks:p.tracks.slice(0,30).map(compactTrack)}}:{ok:false,error:'Çalma listesi bulunamadı.'}}
