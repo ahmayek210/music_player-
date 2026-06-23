@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Liquid Glass Music v7</title>
+<title>Liquid Glass Music v7 — Token Optimized</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.1/dist/tabler-icons.min.css" />
 <style>
@@ -380,6 +380,63 @@ button{border:0;color:inherit}
 .agent-capabilities{display:grid;gap:7px;margin-top:12px}.agent-capability{display:flex;align-items:flex-start;gap:8px;font-size:10px;line-height:1.4;color:var(--ink-2)}.agent-capability i{font-size:15px;color:var(--blue);margin-top:1px}
 @media(max-width:520px){.agent-chat{padding-bottom:180px}.assistant-composer{bottom:98px}.agent-disclaimer{bottom:82px}}
 
+
+
+/* V6 MOBILE UI CLEANUP */
+.nav{gap:7px}
+.nav-item{flex:1 1 0;min-width:0}
+.phone.assistant-open .nav-wrap{display:none}
+
+/* Player: disc first, one unified timeline + controls card */
+.player-content{padding-top:7px}
+.player-disc-wrap.compact{width:min(76vw,292px);margin:4px auto 14px}
+.meta-row{margin:0 1px 14px}
+.transport-card{margin:0 0 12px;padding:14px 13px 9px}
+.transport-progress{padding:0 2px}
+.transport-progress .progress-track{margin-top:11px}
+.transport-progress .progress-bottom{margin-top:9px}
+.transport-card .controls{margin:9px 0 0}
+.transport-card .main-play{width:64px;height:64px}
+.transport-card .control{width:43px;height:43px}
+.next-card{margin-top:0}
+.video-closed-note{margin-bottom:4px}
+
+/* Assistant: one clean conversation surface, no tabs/settings/header block */
+#p-ai{overflow:hidden;padding:0}
+.assistant-minimal-bar{height:58px;flex:0 0 58px;display:flex;align-items:center;justify-content:space-between;padding:8px 16px 5px;position:relative;z-index:20}
+.assistant-back-btn,.assistant-new-chat-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.43);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 8px 20px rgba(45,83,128,.1);cursor:pointer}
+.assistant-back-btn i,.assistant-new-chat-btn i{font-size:22px}
+.assistant-top-actions{display:flex;align-items:center;gap:8px;min-width:0}
+.assistant-new-chat-btn{flex:0 0 42px}
+.assistant-state-compact{display:flex;align-items:center;gap:7px;max-width:180px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.54);font-size:10px;font-weight:730;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.assistant-state-compact span:last-child{overflow:hidden;text-overflow:ellipsis}
+#p-ai .agent-chat{padding:8px 16px 102px;gap:10px}
+#p-ai .agent-welcome{padding:8px 2px 4px;background:none;border:0;box-shadow:none}
+#p-ai .agent-welcome strong{display:block;font-size:16px;letter-spacing:-.02em;margin:1px 2px 10px}
+#p-ai .agent-chips{margin-top:0}
+#p-ai .agent-chip{font-size:10px;padding:8px 11px}
+#p-ai .assistant-composer{bottom:max(12px,env(safe-area-inset-bottom));left:14px;right:14px}
+#p-ai .agent-bubble{font-size:13px;line-height:1.48}
+
+/* Standalone home search page */
+.standalone-search-page{padding:8px 16px 168px}
+.search-page-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.search-page-title{font-size:20px;font-weight:790;letter-spacing:-.03em}
+.search-page-sub{font-size:10px;color:var(--ink-2);margin-top:2px}
+
+@media(max-width:520px){
+  .nav{gap:6px}
+  .nav-item{height:58px}
+  #p-ai .agent-chat{padding-bottom:104px}
+  #p-ai .assistant-composer{bottom:max(10px,env(safe-area-inset-bottom))}
+  .player-disc-wrap.compact{width:min(78vw,288px)}
+}
+@media(max-height:760px){
+  .player-disc-wrap.compact{width:min(64vw,236px);margin:2px auto 9px}
+  .meta-row{margin-bottom:9px}
+  .transport-card{padding-top:11px}
+}
+
 </style>
 </head>
 <body>
@@ -418,30 +475,12 @@ button{border:0;color:inherit}
         <button class="video-toggle tap" id="videoToggleBtn" type="button" aria-expanded="true" aria-controls="videoCard"><i class="ti ti-video"></i><span>Video</span></button>
       </div>
 
-      <div class="transport-card liquid">
-        <div class="transport-summary">
-          <div class="album cover-image transport-thumb" id="transportCover" ></div>
-          <div class="transport-copy">
-            <div class="transport-kicker">OYUN KONTROLLERİ</div>
-            <div class="transport-title" id="transportTitle">Bir şarkı seç</div>
-            <div class="transport-artist" id="transportArtist">Arama veya çalma listesi</div>
-          </div>
-        </div>
-        <div class="controls">
-          <button class="control" id="shuffleBtn" aria-label="Karıştır"><i class="ti ti-arrows-shuffle"></i></button>
-          <button class="control big" id="prevBtn" aria-label="Önceki"><i class="ti ti-player-skip-back-filled"></i></button>
-          <button class="main-play tap" id="mainPlayBtn" aria-label="Oynat veya durdur"><i class="ti ti-player-play-filled"></i></button>
-          <button class="control big" id="nextBtn" aria-label="Sonraki"><i class="ti ti-player-skip-forward-filled"></i></button>
-          <button class="control" id="repeatBtn" aria-label="Tekrar"><i class="ti ti-repeat"></i></button>
-        </div>
-      </div>
-
       <div class="player-disc-wrap compact">
         <div class="player-disc-shadow"></div>
         <div class="player-disc paused" id="playerDisc">
           <div class="disc-rings"></div>
           <div class="disc-cover-shell liquid">
-            <div class="album cover-image disc-cover-art" id="discCover" ></div>
+            <div class="album cover-image disc-cover-art" id="discCover"></div>
           </div>
           <div class="disc-hole"></div>
           <div class="disc-shine"></div>
@@ -460,13 +499,22 @@ button{border:0;color:inherit}
         </div>
       </div>
 
-      <div class="progress liquid">
-        <div class="progress-top"><span class="time-pill current-time" id="currentTime">0:00</span><span class="total-time" id="totalTime">0:00</span></div>
-        <div class="progress-track" id="progressTrack">
-          <div class="progress-fill" id="progressFill" style="width:0%"></div>
-          <input id="seekRange" type="range" min="0" max="1000" value="0" aria-label="Şarkıda ilerle">
+      <div class="transport-card liquid">
+        <div class="transport-progress">
+          <div class="progress-top"><span class="time-pill current-time" id="currentTime">0:00</span><span class="total-time" id="totalTime">0:00</span></div>
+          <div class="progress-track" id="progressTrack">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+            <input id="seekRange" type="range" min="0" max="1000" value="0" aria-label="Şarkıda ilerle">
+          </div>
+          <div class="progress-bottom"><span id="queuePosition">0 / 0</span><span>YouTube</span></div>
         </div>
-        <div class="progress-bottom"><span id="queuePosition">0 / 0</span><span>YouTube</span></div>
+        <div class="controls">
+          <button class="control" id="shuffleBtn" aria-label="Karıştır"><i class="ti ti-arrows-shuffle"></i></button>
+          <button class="control big" id="prevBtn" aria-label="Önceki"><i class="ti ti-player-skip-back-filled"></i></button>
+          <button class="main-play tap" id="mainPlayBtn" aria-label="Oynat veya durdur"><i class="ti ti-player-play-filled"></i></button>
+          <button class="control big" id="nextBtn" aria-label="Sonraki"><i class="ti ti-player-skip-forward-filled"></i></button>
+          <button class="control" id="repeatBtn" aria-label="Tekrar"><i class="ti ti-repeat"></i></button>
+        </div>
       </div>
 
       <div class="next-card liquid" id="nextCard" onclick="playNext()">
@@ -476,8 +524,8 @@ button{border:0;color:inherit}
       </div>
 
       <button class="video-closed-note liquid" id="videoClosedNote" type="button">
-        <i class="ti ti-video"></i>
-        <span class="video-closed-copy"><span class="video-closed-title">YouTube videosunu göster</span><span class="video-closed-sub">Oynatmayı sürdürmek için YouTube oynatıcısı görünür olmalıdır.</span></span>
+        <i class="ti ti-video-off"></i>
+        <span class="video-closed-copy"><span class="video-closed-title">Video gizli</span><span class="video-closed-sub">Müzik çalmaya devam eder. Videoyu göstermek için dokun.</span></span>
         <i class="ti ti-chevron-down"></i>
       </button>
 
@@ -490,67 +538,61 @@ button{border:0;color:inherit}
   </section>
 
   <section class="page" id="p-ai">
-    <div class="ai-head liquid">
-      <div class="ai-mark"><i class="ti ti-sparkles"></i></div>
-      <div><div class="ai-name">Müzik Asistanı</div><div class="ai-sub">Groq ile konuşur, listelerini yönetir ve müzik bulur</div></div>
-      <div class="ai-header-actions">
-        <div class="ai-agent-state" aria-live="polite"><span class="ai-agent-dot" id="aiAgentDot"></span><span id="aiAgentStateText">Hazır değil</span></div>
-        <button class="ai-small-btn" id="openGroqSettingsBtn" type="button" aria-label="Groq ayarları"><i class="ti ti-settings"></i></button>
+    <div class="assistant-minimal-bar">
+      <button class="assistant-back-btn" type="button" onclick="goPage('home')" aria-label="Ana sayfaya dön"><i class="ti ti-chevron-left"></i></button>
+      <div class="assistant-top-actions">
+        <div class="assistant-state-compact" aria-live="polite"><span class="ai-agent-dot" id="aiAgentDot"></span><span id="aiAgentStateText">Hazır değil</span></div>
+        <button class="assistant-new-chat-btn" id="newAssistantChatBtn" type="button" aria-label="Yeni sohbet aç" title="Yeni sohbet"><i class="ti ti-message-plus"></i></button>
       </div>
     </div>
 
-    <div class="ai-tabs" role="tablist">
-      <button class="ai-tab active" id="aiChatTab" type="button" data-ai-tab="chat"><i class="ti ti-message-circle"></i> Asistan</button>
-      <button class="ai-tab" id="aiSearchTab" type="button" data-ai-tab="search"><i class="ti ti-brand-youtube"></i> Manuel arama</button>
-    </div>
-
-    <div class="ai-panel active" id="aiChatPanel">
-      <div class="agent-chat" id="assistantMessages" aria-live="polite">
-        <div class="agent-welcome liquid" id="agentWelcome">
-          <div class="agent-welcome-top"><div class="agent-welcome-icon"><i class="ti ti-wand"></i></div><div><h3>Uygulamanın içinde çalışan bir müzik ajanıyım</h3></div></div>
-          <p>Çalma listesi oluşturabilir, şarkı ekleyip çıkarabilir, YouTube’da albüm ve şarkı arayabilir, listelerini inceleyebilir ve oynatabilirim. Yaptığım işlemleri yalnızca uygulamanın güvenli araçları üzerinden gerçekleştiririm.</p>
-          <div class="agent-chips">
-            <button class="agent-chip" type="button" data-agent-prompt="Çalma listelerimi incele ve bana kısa öneriler ver.">Listelerimi analiz et</button>
-            <button class="agent-chip" type="button" data-agent-prompt="Şu an çalan şarkıyı hangi çalma listeme eklememin daha uygun olduğunu söyle.">Çalan şarkıyı değerlendir</button>
-            <button class="agent-chip" type="button" data-agent-prompt="The Weeknd için yeni bir çalma listesi hazırlamama yardım et.">The Weeknd listesi</button>
-          </div>
+    <div class="agent-chat" id="assistantMessages" aria-live="polite">
+      <div class="agent-welcome" id="agentWelcome">
+        <strong>Ne yapmamı istersin?</strong>
+        <div class="agent-chips">
+          <button class="agent-chip" type="button" data-agent-prompt="Çalma listelerimi incele ve bana kısa öneriler ver.">Listelerimi analiz et</button>
+          <button class="agent-chip" type="button" data-agent-prompt="Şu an çalan şarkıyı hangi çalma listeme eklememin daha uygun olduğunu söyle.">Çalan şarkıyı değerlendir</button>
+          <button class="agent-chip" type="button" data-agent-prompt="The Weeknd için yeni bir çalma listesi hazırlamama yardım et.">Yeni liste hazırla</button>
         </div>
       </div>
-      <form class="assistant-composer liquid" id="assistantForm">
-        <textarea id="assistantInput" rows="1" enterkeyhint="send" maxlength="1200" placeholder="Örn. After Hours albümünü bulup yeni listeye ekle..."></textarea>
-        <button class="assistant-send" id="assistantSendBtn" type="submit" aria-label="Asistana gönder"><i class="ti ti-arrow-up"></i></button>
+    </div>
+
+    <form class="assistant-composer liquid" id="assistantForm">
+      <textarea id="assistantInput" rows="1" enterkeyhint="send" maxlength="1200" placeholder="Asistana bir şey söyle..."></textarea>
+      <button class="assistant-send" id="assistantSendBtn" type="submit" aria-label="Asistana gönder"><i class="ti ti-arrow-up"></i></button>
+    </form>
+  </section>
+
+  <section class="page" id="p-search">
+    <div class="scroll search-page standalone-search-page">
+      <div class="search-page-head">
+        <button class="icon-btn tap" type="button" onclick="goPage('home')" aria-label="Ana sayfaya dön"><i class="ti ti-chevron-left"></i></button>
+        <div><div class="search-page-title">Müzik ara</div><div class="search-page-sub">YouTube kataloğu</div></div>
+      </div>
+      <form class="search-toolbar liquid" id="youtubeSearchForm">
+        <i class="ti ti-search"></i>
+        <input id="youtubeSearchInput" type="search" autocomplete="off" enterkeyhint="search" placeholder="Şarkı, sanatçı veya albüm..." />
+        <button class="search-go" type="submit" aria-label="YouTube’da ara"><i class="ti ti-arrow-right"></i></button>
       </form>
-      <div class="agent-disclaimer">Liste değişiklikleri cihazındaki yerel kütüphaneye uygulanır.</div>
-    </div>
-
-    <div class="ai-panel" id="aiSearchPanel">
-      <div class="scroll search-page">
-        <form class="search-toolbar liquid" id="youtubeSearchForm">
-          <i class="ti ti-search"></i>
-          <input id="youtubeSearchInput" type="search" autocomplete="off" enterkeyhint="search" placeholder="The Weeknd, şarkı veya albüm..." />
-          <button class="search-go" type="submit" aria-label="YouTube’da ara"><i class="ti ti-arrow-right"></i></button>
-        </form>
-        <div class="search-options">
-          <div class="search-status" id="searchStatus">Arama yalnızca düğmeye bastığında kota kullanır.</div>
-          <button class="key-button" type="button" onclick="openApiModal()"><i class="ti ti-settings"></i><span>YouTube API</span></button>
-        </div>
-        <div class="playlist-add-banner liquid" id="playlistAddBanner" hidden>
-          <i class="ti ti-playlist-add"></i>
-          <div><strong id="playlistAddBannerTitle">Listeye şarkı ekle</strong><span>Arama sonuçlarındaki + düğmesine bas.</span></div>
-          <button id="playlistAddBannerCancel" type="button"><i class="ti ti-x"></i></button>
-        </div>
-        <div class="quick-searches">
-          <button class="quick-search" type="button" onclick="quickSearch('The Weeknd official music')">The Weeknd</button>
-          <button class="quick-search" type="button" onclick="quickSearch('Dua Lipa official music')">Dua Lipa</button>
-          <button class="quick-search" type="button" onclick="quickSearch('Harry Styles official music')">Harry Styles</button>
-          <button class="quick-search" type="button" onclick="quickSearch('lofi study music')">Ders müziği</button>
-        </div>
-        <div id="youtubeResults" class="yt-results">
-          <div class="empty-state liquid">
-            <i class="ti ti-brand-youtube"></i>
-            <h3>YouTube kataloğunda ara</h3>
-            <p>Buradaki manuel arama korunuyor. Asistan da aynı kataloğu kendi araçlarıyla kullanabilir.</p>
-          </div>
+      <div class="search-options">
+        <div class="search-status" id="searchStatus">Aramak için yukarıya bir şey yaz.</div>
+      </div>
+      <div class="playlist-add-banner liquid" id="playlistAddBanner" hidden>
+        <i class="ti ti-playlist-add"></i>
+        <div><strong id="playlistAddBannerTitle">Listeye şarkı ekle</strong><span>Arama sonuçlarındaki + düğmesine bas.</span></div>
+        <button id="playlistAddBannerCancel" type="button"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="quick-searches">
+        <button class="quick-search" type="button" onclick="quickSearch('The Weeknd official music')">The Weeknd</button>
+        <button class="quick-search" type="button" onclick="quickSearch('Dua Lipa official music')">Dua Lipa</button>
+        <button class="quick-search" type="button" onclick="quickSearch('Billie Eilish official music')">Billie Eilish</button>
+        <button class="quick-search" type="button" onclick="quickSearch('lofi study music')">Ders müziği</button>
+      </div>
+      <div id="youtubeResults" class="yt-results">
+        <div class="empty-state liquid">
+          <i class="ti ti-brand-youtube"></i>
+          <h3>YouTube kataloğunda ara</h3>
+          <p>Bir şarkı, sanatçı veya albüm adı yaz.</p>
         </div>
       </div>
     </div>
@@ -708,7 +750,7 @@ button{border:0;color:inherit}
   <div class="nav-wrap"><nav class="nav liquid"><button class="nav-item active" id="n-home" onclick="goPage('home')"><i class="ti ti-home-filled"></i><span>Ana Sayfa</span></button><button class="nav-item" id="n-player" onclick="goPage('player')"><i class="ti ti-player-play-filled"></i><span>Oynatıcı</span></button><button class="nav-item" id="n-ai" onclick="goPage('ai')"><i class="ti ti-sparkles"></i><span>Asistan</span></button><button class="nav-item" id="n-lib" onclick="goPage('lib')"><i class="ti ti-library"></i><span>Kütüphane</span></button></nav></div>
 </div>
 <script>
-const ids={home:'p-home',player:'p-player',ai:'p-ai',lib:'p-lib',playlist:'p-playlist'};
+const ids={home:'p-home',player:'p-player',ai:'p-ai',search:'p-search',lib:'p-lib',playlist:'p-playlist'};
 const storageKey='liquidMusicUserName';
 const apiKeyStorage='liquidMusicYoutubeApiKey';
 const historyStorage='liquidMusicHistoryV1';
@@ -718,15 +760,27 @@ const playlistsStorage='liquidMusicPlaylistsV1';
 const playStatsStorage='liquidMusicPlayStatsV1';
 const groqKeyStorage='liquidMusicGroqApiKeyV1';
 const assistantHistoryStorage='liquidMusicAssistantHistoryV1';
+const videoPanelStorage='liquidMusicVideoPanelVisibleV1';
 
 // YouTube anahtarı HTTP referrer ile alan adına kısıtlanabilir.
-const BUILT_IN_YOUTUBE_API_KEY='AIzaSyDrvwPuTA3djJAxEFzZApO4Th77Om51_zk';
+const BUILT_IN_YOUTUBE_API_KEY='';
 
 // UYARI: Bunu herkese açık GitHub Pages HTML dosyasına yazma. Yerel/private test dışında boş bırak.
-const BUILT_IN_GROQ_API_KEY='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';
+const BUILT_IN_GROQ_API_KEY='';
 // Güvenli bir Cloudflare Worker / sunucu proxy kurarsan adresini buraya yazabilirsin.
 const GROQ_PROXY_URL='';
-const GROQ_MODEL='llama-3.3-70b-versatile';
+// Basit komutlarda küçük ve hızlı model; karmaşık albüm/analiz işlerinde daha güçlü model önce denenir.
+const GROQ_MODELS=[
+  {id:'llama-3.1-8b-instant',label:'Llama 3.1 8B'},
+  {id:'meta-llama/llama-4-scout-17b-16e-instruct',label:'Llama 4 Scout'},
+  {id:'qwen/qwen3-32b',label:'Qwen3 32B'},
+  {id:'llama-3.3-70b-versatile',label:'Llama 3.3 70B'}
+];
+const ASSISTANT_STORED_MESSAGE_LIMIT=30;
+const ASSISTANT_CONTEXT_MESSAGE_LIMIT=10;
+const ASSISTANT_MAX_TOOL_ROUNDS=4;
+const ASSISTANT_TOOL_RESULT_CHAR_LIMIT=6000;
+const ASSISTANT_MAX_COMPLETION_TOKENS=420;
 
 const storage={
   get(key){try{return window.localStorage.getItem(key)}catch{return null}},
@@ -759,7 +813,9 @@ let searchCache=new Map();
 let previousPage='home';
 let activeAiTab='chat';
 let assistantBusy=false;
-let assistantConversation=readArray(assistantHistoryStorage).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-20);
+let lastGroqModelLabel='';
+let lastGroqTokenCount=0;
+let assistantConversation=readArray(assistantHistoryStorage).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-ASSISTANT_STORED_MESSAGE_LIMIT);
 
 const userGreeting=$('userGreeting');
 const nameSlots=document.querySelectorAll('.user-name-slot');
@@ -791,13 +847,15 @@ function setCoverElement(el,playlist){
 function goPage(id){
   if(!ids[id])id='home';
   Object.entries(ids).forEach(([key,pageId])=>{$(pageId)?.classList.toggle('active',key===id);$('n-'+key)?.classList.toggle('active',key===id)});
-  if(id!=='playlist')previousPage=id;
+  document.querySelector('.phone')?.classList.toggle('assistant-open',id==='ai');
+  if(id!=='playlist'&&id!=='search')previousPage=id;
   if(id==='home')renderHome();
   if(id==='lib')renderLibrary();
   if(id==='playlist')renderPlaylistDetail();
   if(id==='player'){updatePlayerUI();requestAnimationFrame(()=>requestAnimationFrame(ensureYouTubePlayer))}
+  if(id==='ai'){renderAssistantHistory();setTimeout(()=>$('assistantInput')?.focus(),100)}
 }
-function focusSearch(){setAiTab('search');setTimeout(()=>$('youtubeSearchInput')?.focus(),120)}
+function focusSearch(){goPage('search');setTimeout(()=>$('youtubeSearchInput')?.focus(),120)}
 
 function openNameModal(){nameModal.hidden=false;setTimeout(()=>nameInput.focus(),60)}
 function closeNameModal(){nameModal.hidden=true}
@@ -873,7 +931,7 @@ function openPlaylistPicker(track){pendingTrackForPicker=normalizeTrack(track);r
 function closePlaylistPicker(){$('playlistPickerModal').hidden=true;pendingTrackForPicker=null}
 function renderPlaylistPicker(){const playlists=getPlaylists(),container=$('playlistPickerList');container.innerHTML='';if(!playlists.length){const e=document.createElement('div');e.className='library-empty';e.textContent='Henüz çalma listen yok.';container.appendChild(e);return}playlists.forEach(p=>{const row=document.createElement('button');row.className='picker-item liquid';const cover=document.createElement('div');cover.className='playlist-cover';setCoverElement(cover,p);const copy=document.createElement('div');copy.className='picker-copy';copy.innerHTML='<div class="picker-name"></div><div class="picker-count"></div>';copy.querySelector('.picker-name').textContent=p.name;copy.querySelector('.picker-count').textContent=countText(p.tracks.length);row.append(cover,copy);row.insertAdjacentHTML('beforeend','<i class="ti ti-plus"></i>');row.addEventListener('click',()=>addTrackToPlaylist(p.id,pendingTrackForPicker));container.appendChild(row)})}
 function addTrackToPlaylist(id,rawTrack){const track=normalizeTrack(rawTrack);if(!track.id)return;const playlists=getPlaylists(),p=playlists.find(x=>x.id===id);if(!p)return;if(p.tracks.some(x=>x.id===track.id)){toast('Bu şarkı listede zaten var');closePlaylistPicker();return}p.tracks.push(track);p.updatedAt=Date.now();if(savePlaylists(playlists)){toast(`“${p.name}” listesine eklendi`);closePlaylistPicker();if(activePlaylistId===id)renderPlaylistDetail()}}
-function beginAddToPlaylist(id){const p=getPlaylist(id);if(!p)return;playlistAddTargetId=id;$('playlistAddBanner').hidden=false;$('playlistAddBannerTitle').textContent=`“${p.name}” listesine ekle`;goPage('ai');focusSearch()}
+function beginAddToPlaylist(id){const p=getPlaylist(id);if(!p)return;playlistAddTargetId=id;$('playlistAddBanner').hidden=false;$('playlistAddBannerTitle').textContent=`“${p.name}” listesine ekle`;focusSearch()}
 function cancelPlaylistAddMode(){playlistAddTargetId=null;$('playlistAddBanner').hidden=true}
 
 function setLibraryTab(tab){activeLibrary=tab;document.querySelectorAll('.chip[data-lib]').forEach(x=>x.classList.toggle('active',x.dataset.lib===tab));renderLibrary()}
@@ -903,7 +961,7 @@ function onPlayerError(event){const map={2:'Geçersiz video kimliği',5:'Video H
 function setPlayIcon(isPlaying){const icon=mainPlayBtn?.querySelector('i');if(icon)icon.className=isPlaying?'ti ti-player-pause-filled':'ti ti-player-play-filled'}
 function recordPlay(track){const stats=readObject(playStatsStorage),old=stats[track.id]||{};stats[track.id]={...track,count:(old.count||0)+1,lastPlayed:Date.now()};writeJson(playStatsStorage,stats)}
 function addHistory(track){let history=readArray(historyStorage).map(normalizeTrack).filter(x=>x.id!==track.id);history.unshift(track);writeJson(historyStorage,history.slice(0,50))}
-function playTrack(rawTrack,{addToQueue=true}={}){const track=normalizeTrack(rawTrack);if(!track.id)return;if(addToQueue){let idx=queue.findIndex(x=>x.id===track.id);if(idx<0){queue.push(track);idx=queue.length-1}currentIndex=idx}persistQueue();addHistory(track);recordPlay(track);updatePlayerUI();renderHome();setVideoPanelVisible(true,{scroll:false,pauseWhenHidden:false});goPage('player');if(playerReady&&player)player.loadVideoById({videoId:track.id,startSeconds:0});else{pendingAutoplay=true;$('playerStateText').textContent='YouTube oynatıcı hazırlanıyor…'}}
+function playTrack(rawTrack,{addToQueue=true}={}){const track=normalizeTrack(rawTrack);if(!track.id)return;if(addToQueue){let idx=queue.findIndex(x=>x.id===track.id);if(idx<0){queue.push(track);idx=queue.length-1}currentIndex=idx}persistQueue();addHistory(track);recordPlay(track);updatePlayerUI();renderHome();goPage('player');if(playerReady&&player)player.loadVideoById({videoId:track.id,startSeconds:0});else{pendingAutoplay=true;$('playerStateText').textContent='YouTube oynatıcı hazırlanıyor…'}}
 function updatePlayerUI(){
   const track=currentTrack(),has=Boolean(track?.id);const emptyThumb='';
   $('songTitle').textContent=has?track.title:'Henüz şarkı seçilmedi';$('songArtist').textContent=has?track.channel:'YouTube’da bir şarkı ara';$('transportTitle').textContent=has?track.title:'Bir şarkı seç';$('transportArtist').textContent=has?track.channel:'Arama veya çalma listesi';
@@ -911,9 +969,9 @@ function updatePlayerUI(){
   const next=queue.length>1?queue[(currentIndex+1)%queue.length]:null;$('nextCard').style.display=next?'flex':'none';if(next){$('nextTitle').textContent=next.title;$('nextArtist').textContent=next.channel;$('nextCover').style.backgroundImage=`url("${next.thumb}")`}
   const favs=readArray(favoritesStorage),isFav=has&&favs.some(x=>x.id===track.id);$('likeBtn').disabled=!has;$('addCurrentPlaylistBtn').disabled=!has;$('likeBtn').querySelector('i').className=isFav?'ti ti-heart-filled':'ti ti-heart';$('likeBtn').querySelector('i').style.color=isFav?'#ff3d6b':'';[mainPlayBtn,$('nextBtn'),$('prevBtn'),$('shuffleBtn'),$('repeatBtn')].forEach(b=>{if(b)b.disabled=!has});if(!has){$('playerStateText').textContent='Bir şarkı seç';$('currentTime').textContent='0:00';$('totalTime').textContent='0:00';$('progressFill').style.width='0%'}
 }
-function setVideoPanelVisible(visible,{scroll=false,pauseWhenHidden=true}={}){const show=Boolean(visible);videoCard?.classList.toggle('video-collapsed',!show);videoClosedNote?.classList.toggle('show',!show);if(videoToggleBtn){videoToggleBtn.setAttribute('aria-expanded',String(show));const icon=videoToggleBtn.querySelector('i'),label=videoToggleBtn.querySelector('span');if(icon)icon.className=show?'ti ti-video':'ti ti-video-off';if(label)label.textContent=show?'Video':'Göster'}if(!show&&pauseWhenHidden&&playerReady&&player){try{if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo()}catch{}}if(show&&scroll)setTimeout(()=>videoCard?.scrollIntoView({behavior:'smooth',block:'nearest'}),80)}
-function toggleVideoPanel(){const hidden=videoCard?.classList.contains('video-collapsed');setVideoPanelVisible(hidden,{scroll:hidden,pauseWhenHidden:true});if(!hidden)toast('Video gizlenince oynatma duraklatıldı')}
-function togglePlayback(){const track=currentTrack();if(!track){goPage('ai');focusSearch();toast('Önce bir şarkı seç');return}if(videoCard?.classList.contains('video-collapsed'))setVideoPanelVisible(true,{pauseWhenHidden:false});if(!playerReady||!player){pendingAutoplay=true;ensureYouTubePlayer();toast('YouTube oynatıcı hazırlanıyor…');return}player.getPlayerState()===YT.PlayerState.PLAYING?player.pauseVideo():player.playVideo()}
+function setVideoPanelVisible(visible,{scroll=false}={}){const show=Boolean(visible);videoCard?.classList.toggle('video-collapsed',!show);videoClosedNote?.classList.toggle('show',!show);storage.set(videoPanelStorage,show?'shown':'hidden');if(videoToggleBtn){videoToggleBtn.setAttribute('aria-expanded',String(show));const icon=videoToggleBtn.querySelector('i'),label=videoToggleBtn.querySelector('span');if(icon)icon.className=show?'ti ti-video':'ti ti-video-off';if(label)label.textContent=show?'Video':'Göster'}if(show&&scroll)setTimeout(()=>videoCard?.scrollIntoView({behavior:'smooth',block:'nearest'}),80)}
+function toggleVideoPanel(){const hidden=videoCard?.classList.contains('video-collapsed');setVideoPanelVisible(hidden,{scroll:hidden})}
+function togglePlayback(){const track=currentTrack();if(!track){focusSearch();toast('Önce bir şarkı seç');return}if(!playerReady||!player){pendingAutoplay=true;ensureYouTubePlayer();toast('YouTube oynatıcı hazırlanıyor…');return}player.getPlayerState()===YT.PlayerState.PLAYING?player.pauseVideo():player.playVideo()}
 function playNext(){if(!queue.length)return;currentIndex=shuffleMode?Math.floor(Math.random()*queue.length):(currentIndex+1)%queue.length;persistQueue();playTrack(queue[currentIndex],{addToQueue:false})}
 function playPrevious(){if(!queue.length)return;if(playerReady&&player&&player.getCurrentTime()>4){player.seekTo(0,true);return}currentIndex=(currentIndex-1+queue.length)%queue.length;persistQueue();playTrack(queue[currentIndex],{addToQueue:false})}
 function formatTime(seconds){if(!Number.isFinite(seconds)||seconds<0)return'0:00';const s=Math.floor(seconds%60),m=Math.floor(seconds/60);return`${m}:${String(s).padStart(2,'0')}`}
@@ -926,22 +984,22 @@ function quickSearch(query){$('youtubeSearchInput').value=query;searchYouTube(qu
 
 
 /* ---------- GROQ TOOL-USING MUSIC AGENT ---------- */
-function setAiTab(tab){
-  activeAiTab=tab==='search'?'search':'chat';
-  $('aiChatPanel')?.classList.toggle('active',activeAiTab==='chat');
-  $('aiSearchPanel')?.classList.toggle('active',activeAiTab==='search');
-  $('aiChatTab')?.classList.toggle('active',activeAiTab==='chat');
-  $('aiSearchTab')?.classList.toggle('active',activeAiTab==='search');
-  if(activeAiTab==='chat')setTimeout(()=>$('assistantInput')?.focus(),80)
-}
+function setAiTab(){activeAiTab='chat'}
 function setAgentState(state,text){
   const dot=$('aiAgentDot');if(dot)dot.className=`ai-agent-dot ${state||''}`.trim();
   if($('aiAgentStateText'))$('aiAgentStateText').textContent=text||''
 }
+function compactNumber(value){
+  const n=Number(value)||0;if(n<1000)return String(n);if(n<10000)return`${(n/1000).toFixed(1)}K`;return`${Math.round(n/1000)}K`
+}
+function readyAgentLabel(){
+  if(!lastGroqModelLabel)return'Hazır';
+  return lastGroqTokenCount?`${lastGroqModelLabel} · ${compactNumber(lastGroqTokenCount)} token`:lastGroqModelLabel
+}
 function updateGroqStatus(){
   const builtIn=Boolean(BUILT_IN_GROQ_API_KEY.trim()),proxy=Boolean(GROQ_PROXY_URL.trim()),saved=Boolean(storage.get(groqKeyStorage));
   const ready=proxy||builtIn||saved;
-  setAgentState(ready?'ready':'',ready?'Hazır':'Anahtar gerekli');
+  setAgentState(ready?'ready':'',ready?readyAgentLabel():'Anahtar gerekli');
   const box=$('groqStatusText');if(box)box.textContent=proxy?'Güvenli proxy bağlantısı kullanılacak.':builtIn?'HTML içine tanımlı Groq anahtarı kullanılacak.':saved?'Groq anahtarı bu cihazda kayıtlı.':'Henüz bir Groq anahtarı kaydedilmedi.';
   if($('groqApiKeyInput')&&!builtIn)$('groqApiKeyInput').value=storage.get(groqKeyStorage)||''
 }
@@ -953,15 +1011,21 @@ function saveGroqKey(){
   storage.set(groqKeyStorage,key);updateGroqStatus();closeGroqModal();toast('Müzik asistanı etkinleştirildi')
 }
 function clearGroqKey(){storage.remove(groqKeyStorage);if($('groqApiKeyInput'))$('groqApiKeyInput').value='';updateGroqStatus();toast('Groq anahtarı silindi')}
-function saveAssistantHistory(){writeJson(assistantHistoryStorage,assistantConversation.filter(m=>['user','assistant'].includes(m.role)).slice(-20))}
+function saveAssistantHistory(){writeJson(assistantHistoryStorage,assistantConversation.filter(m=>['user','assistant'].includes(m.role)).slice(-ASSISTANT_STORED_MESSAGE_LIMIT))}
 function clearAssistantHistory(){assistantConversation=[];writeJson(assistantHistoryStorage,[]);renderAssistantHistory();toast('Asistan konuşması temizlendi')}
+function startNewAssistantChat(){
+  if(assistantBusy){toast('İşlem sürerken yeni sohbet açılamaz');return}
+  assistantConversation=[];saveAssistantHistory();renderAssistantHistory();lastGroqModelLabel='';lastGroqTokenCount=0;updateGroqStatus();
+  toast('Yeni sohbet açıldı');setTimeout(()=>$('assistantInput')?.focus(),80)
+}
 function scrollAssistantBottom(){const box=$('assistantMessages');if(box)setTimeout(()=>box.scrollTo({top:box.scrollHeight,behavior:'smooth'}),30)}
 function appendAgentMessage(role,text,{persist=true}={}){
   const row=document.createElement('div');row.className=`agent-message-row ${role==='user'?'user':''}`;
   const bubble=document.createElement('div');bubble.className=`agent-bubble ${role==='user'?'user':'ai'}`;bubble.textContent=text;
   if(role==='user')row.appendChild(bubble);else{const avatar=document.createElement('div');avatar.className='agent-avatar';avatar.innerHTML='<i class="ti ti-sparkles"></i>';row.append(avatar,bubble)}
   $('assistantMessages').appendChild(row);
-  if(persist){assistantConversation.push({role:role==='user'?'user':'assistant',content:text});assistantConversation=assistantConversation.slice(-20);saveAssistantHistory()}
+  if($('agentWelcome'))$('agentWelcome').hidden=true;
+  if(persist){assistantConversation.push({role:role==='user'?'user':'assistant',content:text});assistantConversation=assistantConversation.slice(-ASSISTANT_STORED_MESSAGE_LIMIT);saveAssistantHistory()}
   scrollAssistantBottom();return row
 }
 function appendAgentTool(name,status='working',detail=''){
@@ -980,18 +1044,18 @@ function hideAgentTyping(){$('agentTypingRow')?.remove()}
 function autoGrowAssistantInput(){const el=$('assistantInput');if(!el)return;el.style.height='40px';el.style.height=`${Math.min(92,el.scrollHeight)}px`}
 function renderAssistantHistory(){
   const box=$('assistantMessages');if(!box)return;box.querySelectorAll('.agent-message-row,.agent-tool-row').forEach(x=>x.remove());
+  if($('agentWelcome'))$('agentWelcome').hidden=assistantConversation.length>0;
   assistantConversation.forEach(m=>appendAgentMessage(m.role,m.content,{persist:false}));scrollAssistantBottom()
 }
+function compactTrack(track){return track?{id:track.id,title:track.title,channel:track.channel}:null}
 function buildAssistantContext(){
-  const playlists=getPlaylists().slice(0,30).map(p=>({id:p.id,name:p.name,trackCount:p.tracks.length,artists:[...new Set(p.tracks.map(t=>t.channel))].slice(0,5)}));
-  const current=currentTrack();
-  const history=readArray(historyStorage).map(normalizeTrack).filter(x=>x.id).slice(0,8).map(({id,title,channel})=>({id,title,channel}));
-  const favorites=readArray(favoritesStorage).map(normalizeTrack).filter(x=>x.id).slice(0,8).map(({id,title,channel})=>({id,title,channel}));
-  return{userName:storage.get(storageKey)||'',currentTrack:current?{id:current.id,title:current.title,channel:current.channel}:null,playlists,history,favorites}
+  const playlists=getPlaylists().slice(0,20).map(p=>({id:p.id,name:p.name,trackCount:p.tracks.length}));
+  const history=readArray(historyStorage).map(normalizeTrack).filter(x=>x.id).slice(0,5).map(compactTrack);
+  const favorites=readArray(favoritesStorage).map(normalizeTrack).filter(x=>x.id).slice(0,5).map(compactTrack);
+  return{currentTrack:compactTrack(currentTrack()),playlists,history,favorites}
 }
-function assistantSystemPrompt(){
-  return `Sen bu müzik uygulamasının Türkçe konuşan araç-kullanan asistanısın. Sadece sohbet etmezsin; kullanıcı açıkça istediğinde uygulamanın sağladığı araçlarla çalma listelerini gerçekten değiştirirsin.\n\nKurallar:\n- Bir işlem yaptığını yalnızca araç başarılı döndüyse söyle.\n- Liste oluşturma, ad değiştirme, şarkı ekleme, oynatma gibi isteklerde uygun aracı kullan.\n- Şarkı çıkarma ancak kullanıcı açıkça isterse yapılır. Tüm listeyi silme aracın yok; varmış gibi davranma.\n- Kullanıcı 'albüm' derken uygulamadaki bir çalma listesini kastedebilir. Bağlama göre yorumla; belirsizse kısa bir soru sor.\n- Gerçek bir sanatçı albümünü toplamak için önce search_youtube_playlists kullan; mümkünse resmi sanatçı veya YouTube Music kaynaklı sonucu seç. Sonra import_youtube_playlist kullan. Şüpheli tam-albüm reupload videolarını tercih etme.\n- Aynı şarkıyı bir listeye iki kez ekleme.\n- Kullanıcı bir şarkının listeye uygunluğunu sorarsa önce listeyi ve gerekirse çalan şarkıyı incele. Değerlendirmenin şarkı adı, sanatçı, bilinen müzik özellikleri ve metadata üzerinden olduğunu; sesi doğrudan dinlemediğini gerektiğinde belirt.\n- Araç sonuçlarında hata varsa açıkça söyle ve çözüm öner.\n- Cevapların kısa, doğal ve doğrudan olsun. İşlem sonrası ne yaptığını ve varsa müzikal değerlendirmeni belirt.\n\nUygulamanın güncel özeti:\n${JSON.stringify(buildAssistantContext())}`
-}
+const ASSISTANT_SYSTEM_PROMPT=`Türkçe konuşan müzik uygulaması ajanısın. Uygulama verisini tahmin etme; gerektiğinde araçlarla oku ve kullanıcı bir işlem isterse aracı gerçekten çalıştır. Başarıyı yalnız araç başarılı döndüğünde söyle. Albüm aktarmada önce search_youtube_playlists, sonra import_youtube_playlist kullan; resmi sanatçı veya YouTube Music sonucunu tercih et. Şarkı silme yalnız açık istekle yapılır. Aynı şarkıyı iki kez ekleme. Uygunluk yorumları metadata ve genel müzik bilgisine dayanır; sesi dinlediğini iddia etme. Hataları gizleme. Cevapları kısa ve doğrudan tut.`;
+function assistantSystemPrompt(){return ASSISTANT_SYSTEM_PROMPT}
 function resolvePlaylistRef(ref){
   const playlists=getPlaylists();if(!ref)return null;const q=String(ref).trim().toLocaleLowerCase('tr-TR');
   return playlists.find(p=>p.id===ref)||playlists.find(p=>p.name.toLocaleLowerCase('tr-TR')===q)||playlists.find(p=>p.name.toLocaleLowerCase('tr-TR').includes(q))||null
@@ -1013,7 +1077,7 @@ async function agentYoutubePlaylistItems(playlistId,limit=40){
   const wanted=Math.max(1,Math.min(50,limit));const data=await youtubeApiRequest('playlistItems',{part:'snippet,contentDetails',playlistId,maxResults:String(wanted)});
   let tracks=(data.items||[]).map(item=>normalizeTrack({id:item.contentDetails?.videoId||item.snippet?.resourceId?.videoId,title:item.snippet?.title,channel:item.snippet?.videoOwnerChannelTitle||item.snippet?.channelTitle,thumb:item.snippet?.thumbnails?.medium?.url||item.snippet?.thumbnails?.high?.url})).filter(x=>x.id&&!/deleted video|private video/i.test(x.title));
   if(tracks.length){
-    const details=await youtubeApiRequest('videos',{part:'status,snippet',id:tracks.map(t=>t.id).join(',')});const allowed=new Set((details.items||[]).filter(v=>v.status?.embeddable!==false&&v.status?.privacyStatus==='public').map(v=>v.id));tracks=tracks.filter(t=>allowed.has(t.id))
+    const details=await youtubeApiRequest('videos',{part:'status,snippet',id:tracks.map(t=>t.id).join(','),maxResults:'50'});const allowed=new Set((details.items||[]).filter(v=>v.status?.embeddable!==false&&v.status?.privacyStatus==='public').map(v=>v.id));tracks=tracks.filter(t=>allowed.has(t.id))
   }
   return tracks
 }
@@ -1023,66 +1087,126 @@ function agentAddTracks(playlistRef,rawTracks){
   target.updatedAt=Date.now();if(!savePlaylists(playlists))return{ok:false,error:'Liste kaydedilemedi.'};if(activePlaylistId===target.id)renderPlaylistDetail();return{ok:true,playlist:{id:target.id,name:target.name},added,duplicates,total:target.tracks.length}
 }
 const MUSIC_AGENT_TOOLS=[
-  {type:'function',function:{name:'list_playlists',description:'Kullanıcının tüm çalma listelerini ve kısa özetlerini getirir.',parameters:{type:'object',properties:{},additionalProperties:false}}},
-  {type:'function',function:{name:'get_playlist',description:'Bir çalma listesinin şarkılarını ayrıntılı olarak getirir. Analiz veya uygunluk değerlendirmesinden önce kullan.',parameters:{type:'object',properties:{playlist:{type:'string',description:'Çalma listesi adı veya kimliği'}},required:['playlist'],additionalProperties:false}}},
-  {type:'function',function:{name:'get_library_context',description:'Çalan şarkı, son dinlenenler, beğenilenler ve listelerin kısa özetini getirir.',parameters:{type:'object',properties:{},additionalProperties:false}}},
-  {type:'function',function:{name:'get_current_track',description:'Şu anda seçili veya çalan şarkıyı getirir.',parameters:{type:'object',properties:{},additionalProperties:false}}},
-  {type:'function',function:{name:'create_playlist',description:'Yeni bir çalma listesi oluşturur. Aynı adda liste varsa ikinci bir tane oluşturmaz.',parameters:{type:'object',properties:{name:{type:'string'},icon:{type:'string',enum:['music','heart','moon','star','headphones','bolt']}},required:['name'],additionalProperties:false}}},
-  {type:'function',function:{name:'rename_playlist',description:'Mevcut bir çalma listesinin adını değiştirir.',parameters:{type:'object',properties:{playlist:{type:'string'},new_name:{type:'string'}},required:['playlist','new_name'],additionalProperties:false}}},
-  {type:'function',function:{name:'add_current_track_to_playlist',description:'Şu anda çalan/seçili şarkıyı belirtilen çalma listesine ekler.',parameters:{type:'object',properties:{playlist:{type:'string'}},required:['playlist'],additionalProperties:false}}},
-  {type:'function',function:{name:'add_tracks_to_playlist',description:'Verilen YouTube şarkı nesnelerini belirtilen çalma listesine topluca ekler.',parameters:{type:'object',properties:{playlist:{type:'string'},tracks:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},channel:{type:'string'},thumb:{type:'string'}},required:['id','title','channel'],additionalProperties:false}}},required:['playlist','tracks'],additionalProperties:false}}},
-  {type:'function',function:{name:'remove_track_from_playlist',description:'Kullanıcı açıkça istediğinde bir şarkıyı çalma listesinden çıkarır.',parameters:{type:'object',properties:{playlist:{type:'string'},track:{type:'string',description:'Video kimliği veya şarkı adı'}},required:['playlist','track'],additionalProperties:false}}},
-  {type:'function',function:{name:'search_youtube_videos',description:'YouTube müzik kategorisinde gömülebilir şarkı videoları arar.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:15}},required:['query'],additionalProperties:false}}},
-  {type:'function',function:{name:'search_youtube_playlists',description:'Gerçek bir albümü veya resmi sanatçı listesini bulmak için YouTube çalma listeleri arar.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:10}},required:['query'],additionalProperties:false}}},
-  {type:'function',function:{name:'get_youtube_playlist_items',description:'Bir YouTube çalma listesindeki gömülebilir videoları getirir.',parameters:{type:'object',properties:{playlist_id:{type:'string'},limit:{type:'integer',minimum:1,maximum:50}},required:['playlist_id'],additionalProperties:false}}},
-  {type:'function',function:{name:'import_youtube_playlist',description:'Seçilmiş bir YouTube albüm/çalma listesindeki parçaları yeni veya mevcut uygulama çalma listesine aktarır.',parameters:{type:'object',properties:{youtube_playlist_id:{type:'string'},name:{type:'string'},icon:{type:'string',enum:['music','heart','moon','star','headphones','bolt']}},required:['youtube_playlist_id','name'],additionalProperties:false}}},
-  {type:'function',function:{name:'play_playlist',description:'Belirtilen uygulama çalma listesini normal veya karışık şekilde oynatır.',parameters:{type:'object',properties:{playlist:{type:'string'},shuffle:{type:'boolean'}},required:['playlist'],additionalProperties:false}}}
+  {type:'function',function:{name:'list_playlists',description:'Çalma listelerini özetle.',parameters:{type:'object',properties:{},additionalProperties:false}}},
+  {type:'function',function:{name:'get_playlist',description:'Bir listenin şarkılarını getir.',parameters:{type:'object',properties:{playlist:{type:'string'}},required:['playlist'],additionalProperties:false}}},
+  {type:'function',function:{name:'get_library_context',description:'Çalan şarkı, geçmiş, favoriler ve liste özetlerini getir.',parameters:{type:'object',properties:{},additionalProperties:false}}},
+  {type:'function',function:{name:'get_current_track',description:'Seçili şarkıyı getir.',parameters:{type:'object',properties:{},additionalProperties:false}}},
+  {type:'function',function:{name:'create_playlist',description:'Çalma listesi oluştur.',parameters:{type:'object',properties:{name:{type:'string'},icon:{type:'string',enum:['music','heart','moon','star','headphones','bolt']}},required:['name'],additionalProperties:false}}},
+  {type:'function',function:{name:'rename_playlist',description:'Liste adını değiştir.',parameters:{type:'object',properties:{playlist:{type:'string'},new_name:{type:'string'}},required:['playlist','new_name'],additionalProperties:false}}},
+  {type:'function',function:{name:'add_current_track_to_playlist',description:'Seçili şarkıyı listeye ekle.',parameters:{type:'object',properties:{playlist:{type:'string'}},required:['playlist'],additionalProperties:false}}},
+  {type:'function',function:{name:'add_tracks_to_playlist',description:'YouTube şarkılarını listeye ekle.',parameters:{type:'object',properties:{playlist:{type:'string'},tracks:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},channel:{type:'string'}},required:['id','title','channel'],additionalProperties:false}}},required:['playlist','tracks'],additionalProperties:false}}},
+  {type:'function',function:{name:'remove_track_from_playlist',description:'Bir şarkıyı listeden çıkar.',parameters:{type:'object',properties:{playlist:{type:'string'},track:{type:'string'}},required:['playlist','track'],additionalProperties:false}}},
+  {type:'function',function:{name:'search_youtube_videos',description:'YouTube şarkı videoları ara.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:10}},required:['query'],additionalProperties:false}}},
+  {type:'function',function:{name:'search_youtube_playlists',description:'YouTube albüm veya listesi ara.',parameters:{type:'object',properties:{query:{type:'string'},limit:{type:'integer',minimum:1,maximum:8}},required:['query'],additionalProperties:false}}},
+  {type:'function',function:{name:'get_youtube_playlist_items',description:'YouTube listesindeki parçaları getir.',parameters:{type:'object',properties:{playlist_id:{type:'string'},limit:{type:'integer',minimum:1,maximum:50}},required:['playlist_id'],additionalProperties:false}}},
+  {type:'function',function:{name:'import_youtube_playlist',description:'YouTube listesini uygulamaya aktar.',parameters:{type:'object',properties:{youtube_playlist_id:{type:'string'},name:{type:'string'},icon:{type:'string',enum:['music','heart','moon','star','headphones','bolt']}},required:['youtube_playlist_id','name'],additionalProperties:false}}},
+  {type:'function',function:{name:'play_playlist',description:'Listeyi normal veya karışık oynat.',parameters:{type:'object',properties:{playlist:{type:'string'},shuffle:{type:'boolean'}},required:['playlist'],additionalProperties:false}}}
 ];
+const TOOL_BY_NAME=new Map(MUSIC_AGENT_TOOLS.map(tool=>[tool.function.name,tool]));
+function selectMusicAgentTools(userText){
+  const q=String(userText||'').toLocaleLowerCase('tr-TR');
+  const names=new Set();
+  const add=(...items)=>items.forEach(name=>names.add(name));
+  const musicContext=/(şark|sarki|müzik|muzik|liste|playlist|albüm|album|favori|geçmiş|gecmis|dinle|çal|cal|sanatçı|sanatci)/.test(q);
+  const playlistContext=/(liste|playlist|albüm|album)/.test(q);
+  const inspect=/(analiz|incele|öner|oner|uygun|karşılaştır|karsilastir|hangisi|neden|ne dinle)/.test(q);
+  const addIntent=/(ekle|koy|aktar|topla|hazırla|hazirla|oluştur|olustur)/.test(q);
+  const searchIntent=/(bul|ara|öner|oner|albüm|album|sanatçı|sanatci|şarkılar|sarkilar)/.test(q);
+  const renameIntent=/(adını|adini|isim|yeniden adlandır|degistir|değiştir)/.test(q);
+  const removeIntent=/(sil|çıkar|cikar|kaldır|kaldir)/.test(q);
+  const playIntent=/(oynat|çal|cal|karıştır|karistir)/.test(q);
+  const currentIntent=/(şu an|su an|çalan|calan|bu şarkı|bu sarki)/.test(q);
+  if(musicContext)add('get_library_context');
+  if(playlistContext||inspect||addIntent||renameIntent||removeIntent||playIntent)add('list_playlists','get_playlist');
+  if(currentIntent||addIntent||inspect)add('get_current_track');
+  if(addIntent)add('create_playlist','add_current_track_to_playlist','add_tracks_to_playlist');
+  if(renameIntent)add('rename_playlist');
+  if(removeIntent)add('remove_track_from_playlist');
+  if(searchIntent||/(youtube|resmi|official)/.test(q))add('search_youtube_videos','search_youtube_playlists','get_youtube_playlist_items','import_youtube_playlist');
+  if(playIntent)add('play_playlist');
+  return[...names].map(name=>TOOL_BY_NAME.get(name)).filter(Boolean)
+}
 async function executeMusicAgentTool(name,args={}){
   switch(name){
-    case'list_playlists':return{ok:true,playlists:getPlaylists().map(p=>({id:p.id,name:p.name,trackCount:p.tracks.length,tracks:p.tracks.slice(0,8).map(t=>({id:t.id,title:t.title,channel:t.channel}))}))};
-    case'get_playlist':{const p=resolvePlaylistRef(args.playlist);return p?{ok:true,playlist:{id:p.id,name:p.name,icon:p.icon,trackCount:p.tracks.length,tracks:p.tracks.map(t=>({id:t.id,title:t.title,channel:t.channel,thumb:t.thumb}))}}:{ok:false,error:'Çalma listesi bulunamadı.'}}
+    case'list_playlists':return{ok:true,playlists:getPlaylists().slice(0,20).map(p=>({id:p.id,name:p.name,trackCount:p.tracks.length,tracks:p.tracks.slice(0,5).map(compactTrack)}))};
+    case'get_playlist':{const p=resolvePlaylistRef(args.playlist);return p?{ok:true,playlist:{id:p.id,name:p.name,trackCount:p.tracks.length,truncated:p.tracks.length>30,tracks:p.tracks.slice(0,30).map(compactTrack)}}:{ok:false,error:'Çalma listesi bulunamadı.'}}
     case'get_library_context':return{ok:true,...buildAssistantContext()};
-    case'get_current_track':{const t=currentTrack();return t?{ok:true,track:t}:{ok:false,error:'Şu anda seçili bir şarkı yok.'}}
+    case'get_current_track':{const t=currentTrack();return t?{ok:true,track:compactTrack(t)}:{ok:false,error:'Şu anda seçili bir şarkı yok.'}}
     case'create_playlist':{const name=String(args.name||'').trim();if(!name)return{ok:false,error:'Liste adı boş.'};const existing=resolvePlaylistRef(name);if(existing&&existing.name.toLocaleLowerCase('tr-TR')===name.toLocaleLowerCase('tr-TR'))return{ok:true,created:false,playlist:{id:existing.id,name:existing.name,trackCount:existing.tracks.length}};const playlists=getPlaylists(),p={id:uid(),name,icon:args.icon||'music',cover:'',tracks:[],createdAt:Date.now(),updatedAt:Date.now()};playlists.unshift(p);return savePlaylists(playlists)?{ok:true,created:true,playlist:{id:p.id,name:p.name,trackCount:0}}:{ok:false,error:'Liste kaydedilemedi.'}}
     case'rename_playlist':{const playlists=getPlaylists(),p=resolvePlaylistRef(args.playlist),name=String(args.new_name||'').trim();if(!p)return{ok:false,error:'Çalma listesi bulunamadı.'};if(!name)return{ok:false,error:'Yeni ad boş.'};const target=playlists.find(x=>x.id===p.id);target.name=name;target.updatedAt=Date.now();return savePlaylists(playlists)?{ok:true,playlist:{id:target.id,name:target.name}}:{ok:false,error:'Liste kaydedilemedi.'}}
     case'add_current_track_to_playlist':{const t=currentTrack();if(!t)return{ok:false,error:'Şu anda seçili bir şarkı yok.'};return agentAddTracks(args.playlist,[t])}
     case'add_tracks_to_playlist':return agentAddTracks(args.playlist,args.tracks);
-    case'remove_track_from_playlist':{const playlists=getPlaylists(),p=resolvePlaylistRef(args.playlist);if(!p)return{ok:false,error:'Çalma listesi bulunamadı.'};const target=playlists.find(x=>x.id===p.id),q=String(args.track||'').toLocaleLowerCase('tr-TR');let idx=target.tracks.findIndex(t=>t.id===args.track||t.title.toLocaleLowerCase('tr-TR')===q);if(idx<0)idx=target.tracks.findIndex(t=>t.title.toLocaleLowerCase('tr-TR').includes(q));if(idx<0)return{ok:false,error:'Şarkı bu listede bulunamadı.'};const[removed]=target.tracks.splice(idx,1);target.updatedAt=Date.now();if(!savePlaylists(playlists))return{ok:false,error:'Liste kaydedilemedi.'};if(activePlaylistId===target.id)renderPlaylistDetail();return{ok:true,removed:{id:removed.id,title:removed.title},playlist:{id:target.id,name:target.name},total:target.tracks.length}}
-    case'search_youtube_videos':return{ok:true,results:await agentSearchYoutubeVideos(String(args.query||''),args.limit||8)};
-    case'search_youtube_playlists':return{ok:true,results:await agentSearchYoutubePlaylists(String(args.query||''),args.limit||5)};
-    case'get_youtube_playlist_items':return{ok:true,tracks:await agentYoutubePlaylistItems(String(args.playlist_id||''),args.limit||40)};
+    case'remove_track_from_playlist':{const playlists=getPlaylists(),p=resolvePlaylistRef(args.playlist);if(!p)return{ok:false,error:'Çalma listesi bulunamadı.'};const target=playlists.find(x=>x.id===p.id),q=String(args.track||'').toLocaleLowerCase('tr-TR');const idx=target.tracks.findIndex(t=>t.id===args.track||t.title.toLocaleLowerCase('tr-TR')===q)||target.tracks.findIndex(t=>t.title.toLocaleLowerCase('tr-TR').includes(q));if(idx<0)return{ok:false,error:'Şarkı bu listede bulunamadı.'};const[removed]=target.tracks.splice(idx,1);target.updatedAt=Date.now();if(!savePlaylists(playlists))return{ok:false,error:'Liste kaydedilemedi.'};if(activePlaylistId===target.id)renderPlaylistDetail();return{ok:true,removed:{id:removed.id,title:removed.title},playlist:{id:target.id,name:target.name},total:target.tracks.length}}
+    case'search_youtube_videos':return{ok:true,results:(await agentSearchYoutubeVideos(String(args.query||''),args.limit||6)).map(compactTrack)};
+    case'search_youtube_playlists':return{ok:true,results:(await agentSearchYoutubePlaylists(String(args.query||''),args.limit||5)).map(x=>({playlistId:x.playlistId,title:x.title,channel:x.channel}))};
+    case'get_youtube_playlist_items':return{ok:true,tracks:(await agentYoutubePlaylistItems(String(args.playlist_id||''),args.limit||30)).map(compactTrack)};
     case'import_youtube_playlist':{const tracks=await agentYoutubePlaylistItems(String(args.youtube_playlist_id||''),50);if(!tracks.length)return{ok:false,error:'Bu YouTube listesinde aktarılabilir şarkı bulunamadı.'};let p=resolvePlaylistRef(args.name);if(!p){const created=await executeMusicAgentTool('create_playlist',{name:args.name,icon:args.icon||'music'});if(!created.ok)return created;p=resolvePlaylistRef(created.playlist.id)}const result=agentAddTracks(p.id,tracks);return{...result,sourceTrackCount:tracks.length}}
     case'play_playlist':{const p=resolvePlaylistRef(args.playlist);if(!p)return{ok:false,error:'Çalma listesi bulunamadı.'};if(!p.tracks.length)return{ok:false,error:'Çalma listesi boş.'};playPlaylist(p.id,Boolean(args.shuffle));return{ok:true,playlist:{id:p.id,name:p.name},shuffle:Boolean(args.shuffle),trackCount:p.tracks.length}}
     default:return{ok:false,error:`Bilinmeyen araç: ${name}`}
   }
 }
-async function callGroqAgent(messages){
-  const body={model:GROQ_MODEL,messages,tools:MUSIC_AGENT_TOOLS,tool_choice:'auto',temperature:.2,max_completion_tokens:900,parallel_tool_calls:true};
-  const proxy=GROQ_PROXY_URL.trim();const key=getGroqApiKey();if(!proxy&&!key)throw new Error('Groq API anahtarı ayarlanmamış.');
-  const response=await fetch(proxy||'https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',...(proxy?{}:{Authorization:`Bearer ${key}`})},body:JSON.stringify(body)});
-  const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data?.error?.message||`Groq isteği başarısız (${response.status}).`);const message=data?.choices?.[0]?.message;if(!message)throw new Error('Groq boş yanıt verdi.');return message
+function isComplexAgentTask(text){return/(albüm|album|analiz|incele|öner|oner|uygun|karşılaştır|karsilastir|topla|aktar|hazırla|hazirla)/i.test(String(text||''))}
+function groqModelPlan(userText){
+  const byId=new Map(GROQ_MODELS.map(model=>[model.id,model]));
+  const order=isComplexAgentTask(userText)
+    ?['meta-llama/llama-4-scout-17b-16e-instruct','qwen/qwen3-32b','llama-3.1-8b-instant','llama-3.3-70b-versatile']
+    :['llama-3.1-8b-instant','meta-llama/llama-4-scout-17b-16e-instruct','qwen/qwen3-32b','llama-3.3-70b-versatile'];
+  return order.map(id=>byId.get(id)).filter(Boolean)
+}
+function shouldFallbackGroq(status,message=''){
+  if(status===429||status===408||status===500||status===502||status===503||status===504)return true;
+  return[400,403,404].includes(status)&&/(model|permission|allowed|disabled|unavailable|not found|decommission)/i.test(message)
+}
+function compactToolResult(result){
+  const json=JSON.stringify(result);return json.length<=ASSISTANT_TOOL_RESULT_CHAR_LIMIT?json:JSON.stringify({ok:result?.ok!==false,truncated:true,summary:json.slice(0,ASSISTANT_TOOL_RESULT_CHAR_LIMIT)})
+}
+async function callGroqAgent(messages,tools,modelPlan,startIndex=0){
+  const proxy=GROQ_PROXY_URL.trim(),key=getGroqApiKey();if(!proxy&&!key)throw new Error('Groq API anahtarı ayarlanmamış.');
+  let lastError=null;
+  for(let index=startIndex;index<modelPlan.length;index++){
+    const model=modelPlan[index];setAgentState('busy',`${model.label} çalışıyor`);
+    const body={model:model.id,messages,temperature:.15,max_completion_tokens:ASSISTANT_MAX_COMPLETION_TOKENS};
+    if(tools.length){body.tools=tools;body.tool_choice='auto'}
+    let response,data;
+    try{
+      response=await fetch(proxy||'https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',...(proxy?{}:{Authorization:`Bearer ${key}`})},body:JSON.stringify(body)});
+      data=await response.json().catch(()=>({}));
+    }catch(error){throw new Error('Groq sunucusuna bağlanılamadı. İnternet bağlantısını kontrol et.')}
+    if(response.ok){
+      const message=data?.choices?.[0]?.message;if(!message)throw new Error('Groq boş yanıt verdi.');
+      return{message,model,index,usage:data?.usage||{}}
+    }
+    const message=data?.error?.message||`Groq isteği başarısız (${response.status}).`;
+    lastError=new Error(message);lastError.status=response.status;
+    if(!shouldFallbackGroq(response.status,message)||index===modelPlan.length-1)throw lastError;
+    const next=modelPlan[index+1];toast(`${model.label} kullanılamadı; ${next.label} deneniyor`)
+  }
+  throw lastError||new Error('Kullanılabilir Groq modeli bulunamadı.')
 }
 async function runAssistant(userText){
   if(assistantBusy)return;if(!hasGroqConnection()){openGroqModal();toast('Önce Groq bağlantısını ayarla');return}
-  assistantBusy=true;$('assistantSendBtn').disabled=true;$('assistantInput').disabled=true;setAgentState('busy','Çalışıyor');appendAgentMessage('user',userText);showAgentTyping();
-  let messages=[{role:'system',content:assistantSystemPrompt()},...assistantConversation.slice(0,-1).slice(-12),{role:'user',content:userText}];
+  assistantBusy=true;$('assistantSendBtn').disabled=true;$('assistantInput').disabled=true;setAgentState('busy','Hazırlanıyor');appendAgentMessage('user',userText);showAgentTyping();
+  const tools=selectMusicAgentTools(userText),modelPlan=groqModelPlan(userText);
+  let modelIndex=0,totalTokens=0;
+  let messages=[{role:'system',content:assistantSystemPrompt()},...assistantConversation.slice(0,-1).slice(-ASSISTANT_CONTEXT_MESSAGE_LIMIT),{role:'user',content:userText}];
   try{
-    for(let round=0;round<8;round++){
-      const reply=await callGroqAgent(messages);hideAgentTyping();
+    for(let round=0;round<ASSISTANT_MAX_TOOL_ROUNDS;round++){
+      const result=await callGroqAgent(messages,tools,modelPlan,modelIndex);modelIndex=result.index;lastGroqModelLabel=result.model.label;
+      totalTokens+=Number(result.usage?.total_tokens||0);lastGroqTokenCount=totalTokens;
+      const reply=result.message;hideAgentTyping();
       if(Array.isArray(reply.tool_calls)&&reply.tool_calls.length){
         messages.push({role:'assistant',content:reply.content||null,tool_calls:reply.tool_calls});
         for(const call of reply.tool_calls){
           let args={};try{args=JSON.parse(call.function?.arguments||'{}')}catch{}
-          const toolRow=appendAgentTool(call.function?.name,'working');let result;
-          try{result=await executeMusicAgentTool(call.function?.name,args);finishAgentTool(toolRow,Boolean(result?.ok),result?.ok?'İşlem tamamlandı':result?.error||'İşlem başarısız')}catch(err){result={ok:false,error:err.message||'Araç hatası'};finishAgentTool(toolRow,false,result.error)}
-          messages.push({role:'tool',tool_call_id:call.id,name:call.function?.name,content:JSON.stringify(result).slice(0,30000)})
+          const toolRow=appendAgentTool(call.function?.name,'working');let toolResult;
+          try{toolResult=await executeMusicAgentTool(call.function?.name,args);finishAgentTool(toolRow,Boolean(toolResult?.ok),toolResult?.ok?'İşlem tamamlandı':toolResult?.error||'İşlem başarısız')}catch(err){toolResult={ok:false,error:err.message||'Araç hatası'};finishAgentTool(toolRow,false,toolResult.error)}
+          messages.push({role:'tool',tool_call_id:call.id,name:call.function?.name,content:compactToolResult(toolResult)})
         }
         showAgentTyping();continue
       }
       const answer=(reply.content||'İşlem tamamlandı.').trim();appendAgentMessage('assistant',answer);return
     }
-    throw new Error('Asistan çok fazla işlem adımına girdi. İsteği biraz daha açık yaz.')
+    throw new Error('İşlem adımı sınırına ulaşıldı. İsteği iki parçaya bölerek tekrar dene.')
   }catch(err){hideAgentTyping();setAgentState('error','Hata');appendAgentMessage('assistant',`İşlemi tamamlayamadım: ${err.message||'Bilinmeyen hata'}`);console.error(err)
   }finally{assistantBusy=false;$('assistantSendBtn').disabled=false;$('assistantInput').disabled=false;updateGroqStatus();$('assistantInput').focus()}
 }
@@ -1091,6 +1215,7 @@ document.querySelectorAll('[data-ai-tab]').forEach(btn=>btn.addEventListener('cl
 document.querySelectorAll('[data-agent-prompt]').forEach(btn=>btn.addEventListener('click',()=>{setAiTab('chat');const prompt=btn.dataset.agentPrompt||'';$('assistantInput').value=prompt;autoGrowAssistantInput();runAssistant(prompt);$('assistantInput').value='';autoGrowAssistantInput()}));
 $('assistantForm')?.addEventListener('submit',e=>{e.preventDefault();const text=$('assistantInput').value.trim();if(!text)return;$('assistantInput').value='';autoGrowAssistantInput();runAssistant(text)});
 $('assistantInput')?.addEventListener('input',autoGrowAssistantInput);$('assistantInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('assistantForm').requestSubmit()}});
+$('newAssistantChatBtn')?.addEventListener('click',startNewAssistantChat);
 $('openGroqSettingsBtn')?.addEventListener('click',openGroqModal);$('groqModalClose')?.addEventListener('click',closeGroqModal);$('groqKeySave')?.addEventListener('click',saveGroqKey);$('groqKeyClear')?.addEventListener('click',clearGroqKey);$('assistantHistoryClear')?.addEventListener('click',clearAssistantHistory);$('groqModal')?.addEventListener('click',e=>{if(e.target===$('groqModal'))closeGroqModal()});
 $('newPlaylistHomeBtn')?.addEventListener('click',()=>openPlaylistModal());$('newPlaylistLibraryBtn')?.addEventListener('click',()=>openPlaylistModal());
 $('playlistBackBtn')?.addEventListener('click',()=>goPage(previousPage==='playlist'?'lib':previousPage));$('editPlaylistBtn')?.addEventListener('click',()=>openPlaylistModal(activePlaylistId));$('playlistPlayBtn')?.addEventListener('click',()=>playPlaylist(activePlaylistId,false));$('playlistShuffleBtn')?.addEventListener('click',()=>playPlaylist(activePlaylistId,true));$('playlistAddSongsBtn')?.addEventListener('click',()=>beginAddToPlaylist(activePlaylistId));$('deletePlaylistBtn')?.addEventListener('click',deleteActivePlaylist);
@@ -1101,7 +1226,7 @@ $('playlistPickerClose')?.addEventListener('click',closePlaylistPicker);$('playl
 $('playlistAddBannerCancel')?.addEventListener('click',cancelPlaylistAddMode);
 document.querySelectorAll('.chip[data-lib]').forEach(chip=>chip.addEventListener('click',()=>setLibraryTab(chip.dataset.lib)));$('librarySearch')?.addEventListener('input',renderLibrary);$('clearLibraryBtn')?.addEventListener('click',()=>{if(activeLibrary==='favorites')writeJson(favoritesStorage,[]);else if(activeLibrary==='history')writeJson(historyStorage,[]);renderLibrary();renderHome();toast('Liste temizlendi')});
 $('youtubeSearchForm')?.addEventListener('submit',e=>{e.preventDefault();searchYouTube($('youtubeSearchInput').value)});
-videoToggleBtn?.addEventListener('click',toggleVideoPanel);videoClosedNote?.addEventListener('click',()=>setVideoPanelVisible(true,{scroll:true,pauseWhenHidden:false}));$('hideVideoBtn')?.addEventListener('click',()=>setVideoPanelVisible(false,{pauseWhenHidden:true}));
+videoToggleBtn?.addEventListener('click',toggleVideoPanel);videoClosedNote?.addEventListener('click',()=>setVideoPanelVisible(true,{scroll:true}));$('hideVideoBtn')?.addEventListener('click',()=>setVideoPanelVisible(false));
 mainPlayBtn?.addEventListener('click',togglePlayback);$('nextBtn')?.addEventListener('click',playNext);$('prevBtn')?.addEventListener('click',playPrevious);$('repeatBtn')?.addEventListener('click',()=>{repeatMode=!repeatMode;$('repeatBtn').classList.toggle('toggle-on',repeatMode);toast(repeatMode?'Tekrar açık':'Tekrar kapalı')});$('shuffleBtn')?.addEventListener('click',()=>{shuffleMode=!shuffleMode;$('shuffleBtn').classList.toggle('toggle-on',shuffleMode);toast(shuffleMode?'Karıştırma açık':'Karıştırma kapalı')});
 $('likeBtn')?.addEventListener('click',()=>{const track=currentTrack();if(!track)return;let favs=readArray(favoritesStorage).map(normalizeTrack);const idx=favs.findIndex(x=>x.id===track.id);if(idx>=0){favs.splice(idx,1);toast('Beğenilenlerden çıkarıldı')}else{favs.unshift(track);favs=favs.slice(0,100);toast('Beğenilenlere eklendi')}writeJson(favoritesStorage,favs);updatePlayerUI();renderLibrary()});$('addCurrentPlaylistBtn')?.addEventListener('click',()=>{const track=currentTrack();if(track)openPlaylistPicker(track)});
 $('seekRange')?.addEventListener('input',e=>{if(!playerReady||!player)return;const duration=player.getDuration()||0,pct=Number(e.target.value)/1000;$('progressFill').style.width=`${pct*100}%`;$('currentTime').textContent=formatTime(duration*pct)});$('seekRange')?.addEventListener('change',e=>{if(!playerReady||!player)return;const duration=player.getDuration()||0;player.seekTo(duration*(Number(e.target.value)/1000),true)});
@@ -1109,7 +1234,7 @@ $('apiModal')?.addEventListener('click',e=>{if(e.target===$('apiModal'))closeApi
 
 if(BUILT_IN_YOUTUBE_API_KEY.trim())document.querySelectorAll('[onclick="openApiModal()"], .api-modal').forEach(el=>{if(el.classList.contains('api-modal'))el.hidden=true;else el.style.display='none'});
 window.goPage=goPage;window.focusSearch=focusSearch;window.quickSearch=quickSearch;window.openApiModal=openApiModal;window.closeApiModal=closeApiModal;window.saveApiKey=saveApiKey;window.clearApiKey=clearApiKey;window.playNext=playNext;window.setLibraryTab=setLibraryTab;window.setAiTab=setAiTab;window.openGroqModal=openGroqModal;
-renderHome();renderLibrary();updatePlayerUI();renderAssistantHistory();updateGroqStatus();setAiTab('chat');
+renderHome();renderLibrary();updatePlayerUI();renderAssistantHistory();updateGroqStatus();setAiTab('chat');setVideoPanelVisible(storage.get(videoPanelStorage)!=='hidden');
 </script>
 </body>
 </html>
